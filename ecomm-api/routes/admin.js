@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const Product = require('../models/productModel');
+const Order =require('../models/ordersModel')
+
 const QRCode =require('qrcode')
 
 
@@ -204,4 +206,61 @@ router.get('/v2/productqr/:id',async(req,res)=>{
     }
   })
 })
+// update order status
+
+router.put('/status/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+  
+        // Allowed status values
+        const allowedStatuses = ['pending', 'dispached', 'completed','returned'];
+        if (!allowedStatuses.includes(status)) {
+            return res.status(400).json({ message: 'Invalid status value' });
+        }
+  
+        // Find and update the order
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            { status },
+            { new: true } // Return the updated order
+        );
+  
+        if (!updatedOrder) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+  
+        res.status(200).json({ message: 'Order status updated successfully', order: updatedOrder });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  });
+  router.get('/getorder/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+  
+        // Find the order and populate user and product details
+        const order = await Order.findById(orderId)
+            .populate('user', 'name email') // Fetch user details (only name and email)
+            .populate('products.product', 'name price'); // Fetch product details (only name and price)
+  
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+  
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  });
+//   get all orders and statuses
+router.get('/allorders' ,async(req,res)=>{
+     const order = await Order.find()
+     .populate('user', 'name email') // Fetch user details (only name and email)
+     .populate('products.product', 'name price'); // Fetch product details (only name and price)
+     if(!order){
+        return  res.status(200).json({message:" internal error could not find orders"});
+     }
+     res.status(200).json(order);
+    })
   module.exports = router; 

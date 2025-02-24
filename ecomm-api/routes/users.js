@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
+const Cart =require('../models/cartModel');
+const Order =require('../models/ordersModel')
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -146,6 +148,186 @@ router.get('/product/:id', async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+// 🛒 Route: Add product to cart
+router.post('/addtocart', async (req, res) => {
+  try {
+      const { userId, productId, quantity } = req.body;
 
+      if (!userId || !productId) {
+          return res.status(400).json({ message: 'User ID and Product ID are required' });
+      }
+
+      let cart = await Cart.findOne({ userId });
+
+      if (!cart) {
+          // If the cart doesn't exist, create a new one
+          cart = new Cart({
+              userId,
+              cartItems: [{ productId, quantity: quantity || 1 }]
+          });
+      } else {
+          // Check if product already exists in cart
+          const itemIndex = cart.cartItems.findIndex(item => item.productId.toString() === productId);
+
+          if (itemIndex > -1) {
+              // Product exists, update quantity
+              cart.cartItems[itemIndex].quantity += quantity ;
+          } else {
+              // Add new product
+              cart.cartItems.push({ productId, quantity: quantity});
+          }
+      }
+
+      await cart.save();
+      res.status(200).json({ message: 'Product added to cart', cart });
+  } catch (error) {
+      console.error('Error adding to cart:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+// 🛒 Route: Get cart data of a user
+router.get('/getcart/:id', async (req, res) => {
+  try {
+      const userId  = req.params.id;
+      console.log(userId);
+
+      // Find the cart and populate product details
+      const cart = await Cart.findOne({ userId }).populate('cartItems.productId');
+
+      if (!cart) {
+          return res.status(404).json({ message: 'Cart not found' });
+      }
+
+      res.status(200).json(cart.cartItems);
+  } catch (error) {
+      console.error('Error fetching cart:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+// 🛒 Route: Remove product from cart
+router.delete('/removeitem', async (req, res) => {
+  try {
+      const { userId, productId } = req.body;
+
+      if (!userId || !productId) {
+          return res.status(400).json({ message: 'User ID and Product ID are required' });
+      }
+
+      let cart = await Cart.findOne({ userId });
+
+      if (!cart) {
+          return res.status(404).json({ message: 'Cart not found' });
+      }
+
+      // Filter out the product from cartItems array
+      cart.cartItems = cart.cartItems.filter(item => item.productId.toString() !== productId);
+
+      await cart.save();
+      res.status(200).json({ message: 'Product removed from cart', cart });
+  } catch (error) {
+      console.error('Error removing product from cart:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+// 🛒 Route: Clear the entire cart for a user
+router.delete('/clearcart', async (req, res) => {
+  try {
+      const { userId } = req.body;
+
+      if (!userId) {
+          return res.status(400).json({ message: 'User ID is required' });
+      }
+
+      // Find and delete the user's cart
+      const cart = await Cart.findOneAndDelete({ userId });
+
+      if (!cart) {
+          return res.status(404).json({ message: 'Cart not found' });
+      }
+
+      res.status(200).json({ message: 'Cart cleared successfully' });
+  } catch (error) {
+      console.error('Error clearing cart:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Create a new order
+router.post('/addorder', async (req, res) => {
+  try {
+      const { userId, products } = req.body;
+
+      // Validate request body
+      if (!userId || !products || !Array.isArray(products) || products.length === 0) {
+          return res.status(400).json({ message: 'Invalid request data' });
+      }
+
+      // Validate each product and calculate total amount
+      let totalAmount = 0;
+      for (let item of products) {
+          const product = await Product.findById(item.productId);
+          if (!product) {
+              return res.status(404).json({ message: `Product with ID ${item.productId} not found` });
+          }
+          totalAmount += product.price * (item.quantity || 1);
+      }
+
+      // Create a new order
+      const newOrder = new Order({
+          user: userId,
+          products: products.map(item => ({
+              product: item.productId,
+              quantity: item.quantity || 1
+          })),
+          totalAmount
+      });
+
+      // Save the order
+      const savedOrder = await newOrder.save();
+      res.status(201).json({ message: 'Order placed successfully', order: savedOrder });
+
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+// get order
+router.get('/getorder/:orderId', async (req, res) => {
+  try {
+      const { orderId } = req.params;
+
+      // Find the order and populate user and product details
+      const order = await Order.findById(orderId)
+          .populate('user', 'name email') // Fetch user details (only name and email)
+          .populate('products.product', 'name price'); // Fetch product details (only name and price)
+
+      if (!order) {
+          return res.status(404).json({ message: 'Order not found' });
+      }
+
+      res.status(200).json(order);
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Get all orders of a specific user
+router.get('/myorders/:userId', async (req, res) => {
+  try {
+      const { userId } = req.params;
+
+      // Find orders placed by the user, sorted by latest first
+      const orders = await Order.find({ user: userId })
+          .populate('products.product', 'name price') // Populate product details
+          .sort({ createdAt: -1 }); // Sort by latest orders first
+
+      if (!orders.length) {
+          return res.status(404).json({ message: 'No orders found for this user' });
+      }
+
+      res.status(200).json({ orders });
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 
 module.exports = router;
