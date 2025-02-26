@@ -7,6 +7,11 @@ const Order =require('../models/ordersModel')
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const fs = require('fs').promises;
+const ejs = require('ejs');
+
+
 
 const verifyToken = (requiredRole) => {
   return (req, res, next) => {
@@ -330,4 +335,58 @@ router.get('/myorders/:userId', async (req, res) => {
   }
 });
 
+//send email to the user
+router.get('/sendemail/:id', async (req, res) => {
+  try {
+    // Assuming you have a Product model or equivalent
+    const order = await Order.findById( req.params.id)
+          .populate('user', 'name email')
+          .populate('products.product', 'model price') // Populate product details
+          .sort({ createdAt: -1 });
+
+          if (!order) {
+            return res.status(404).json({ message: 'No orders found for this user' });
+        }
+        const userEmail = order.user.email;
+
+    // Create a nodemailer transport object
+    // replace this with your copied code
+      // Looking to send emails in production? Check out our Email API/SMTP product!
+     // Looking to send emails in production? Check out our Email API/SMTP product!
+        var transport = nodemailer.createTransport({
+          host: "sandbox.smtp.mailtrap.io",
+          port: 2525,
+          auth: {
+            user: process.env.EMAIL_AUTH,
+            pass: process.env.EMAIL_PASS
+          }
+        });
+
+
+    const template = await fs.readFile('./views/product_email.ejs', 'utf8');
+    
+    // Email content
+    const mailOptions = {
+      from: process.env.EMAIL_ADMIN, // Sender email address
+      to: `${userEmail}`, // Receiver email address
+      subject: 'Order Details', // Email subject
+      html: ejs.render(template, { order }) // Render HTML using EJS
+    };
+
+
+    // Send the email
+    const info = await transport.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+
+
+    // Close the transport after sending the email
+    transport.close();
+
+
+    res.send('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 module.exports = router;

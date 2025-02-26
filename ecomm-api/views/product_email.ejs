@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+</head>
+<body>
+  <h2>Order Confirmation Mail</h2>
+
+  <p>Hello <%= order.user.email %>,</p>
+
+  <p>Thank you for your order with us!</p>
+
+  <p>We’re excited to confirm that your booking for the following product has been received and is being processed:</p>
+
+  <table>
+    <tr>
+      <td><strong>Order Number:</strong></td>
+      <td><%= order._id %></td>
+    </tr>
+    <tr>
+      <td><strong>Products:</strong></td>
+      <td><%= order.products.map(product => product.product.model).join(', ') %></td>
+    </tr>
+    <tr>
+      <td><strong>Quantity:</strong></td>
+      <td><%= order.products.map(product => product.quantity).join(', ') %></td>
+    </tr>
+    <tr>
+      <td><strong>Total Amount:</strong></td>
+      <td><%= order.totalAmount %></td>
+    </tr>
+    <tr>
+      <td><strong>Order Status:</strong></td>
+      <td><%= order.status %></td>
+    </tr>
+  </table>
+
+  <p>You will receive another email once your order has been shipped. We will keep you updated with any changes to your order.</p>
+
+  <p>If you have any questions or need further assistance, feel free to contact us at support@gmail.com or 13764285.</p>
+
+  <p>Thank you for choosing us!</p>
+
+  <p>Best regards,</p>
+  <p>my real compaompany</p>
+  <p>real Company Address.po</p>
+  <p>realcomany@gmail.com</p>
+</body>
+</html>
