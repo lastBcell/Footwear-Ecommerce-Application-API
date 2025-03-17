@@ -1,3 +1,4 @@
+[![trophy](https://github-profile-trophy.vercel.app/?lastBcell&theme=onedark)](https://github.com/ryo-ma/github-profile-trophy)
 # Footwear Ecommerce Application API
 
 ## Overview
