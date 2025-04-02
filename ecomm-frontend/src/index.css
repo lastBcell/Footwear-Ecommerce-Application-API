@@ -3,8 +3,16 @@
 *{
 
   font-family: poppins;
+  
 }
-
+::selection{
+  color: rgb(160, 212, 160);
+}
+/* body{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+} */
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
