@@ -56,6 +56,21 @@ router.post('/addproduct', (req, res) => {
             res.status(500).json({ message: 'Server Error' });
         });
 });
+// # product
+router.get('/Adminproduct/:id', async (req, res) => {
+  try {
+      const product = await Product.findOne({ _id: req.params.id});
+
+      if (!product) {
+          return res.status(404).json({ message: 'Product not found or not available for display' });
+      }
+      
+      res.status(200).json({ product });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 // #Edit Product#
 router.put('/editproduct/:id', async (req, res) => {

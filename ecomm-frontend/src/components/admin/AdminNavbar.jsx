@@ -11,47 +11,39 @@ const Navbar = () => {
       <div className=" fixed z-[7] bg-zinc-800 text-zinc-500 flex items-center w-full justify-between p-4 px-6">
         <span className="flex items-center gap-2 ">
           <IoFootstepsOutline size="2em" />
-          <h1 className="font-bold text-2xl">Foostah..</h1>
+          <h1 className="font-bold text-2xl">Foostah <span className="text-lime-500">Admin</span></h1>
         </span>
 
         <div className="hidden sm:flex gap-3">
       <NavLink
-        to="/"
+        to="/lists"
         end
         className={({ isActive }) =>
           isActive ? "bg-zinc-700 text-lime-400 p-2 px-3 rounded " : "text-zinc-500 hover:bg-zinc-700  p-2 px-3 rounded d "
         }
       >
-        Home
+       lists
       </NavLink>
-      {/* <NavLink
-        to="/aboutus"
-        className={({ isActive }) =>
-          isActive ? "bg-zinc-700 text-lime-400 p-2 px-3 rounded" : "text-zinc-500 hover:bg-zinc-700 p-2 px-3 rounded"
-        }
-      >
-        About us
-      </NavLink> */}
       <NavLink
-        to="/container"
+        to="/orders"
         className={({ isActive }) =>
           isActive ? "bg-zinc-700 text-lime-400 p-2 px-3 rounded" : "text-zinc-500 hover:bg-zinc-700 p-2 px-3 rounded"
         }
       >
-        All Products
+      Orders
+      </NavLink>
+      <NavLink
+        to="/stocks"
+        className={({ isActive }) =>
+          isActive ? "bg-zinc-700 text-lime-400 p-2 px-3 rounded" : "text-zinc-500 hover:bg-zinc-700 p-2 px-3 rounded"
+        }
+      >
+        Stocks
       </NavLink>
     </div>
         
-    <div className="hidden sm:block ">
-    <NavLink
-        to="/cart"
-        className={({ isActive }) =>
-          isActive ? "bg-zinc-700 text-lime-400 p-2 px-3 rounded" : "text-zinc-500 hover:bg-zinc-700 p-2 px-3 rounded"
-        }
-      >
-       Cart
-      </NavLink>
-          <button className="hover:bg-zinc-700 p-2 px-3 rounded">SignIn</button>
+        <div className="hidden sm:block p-2">
+          <button className="hover:bg-zinc-700 p-2 px-3 rounded">Logout</button>
         </div>
 
         <div className="sm:hidden p-2">
@@ -68,44 +60,33 @@ const Navbar = () => {
       {isOpen && (
        <div className="fixed z-[8] top-[5em] left-0 bg-zinc-900 w-full text-center text-zinc-500 sm:hidden">
        <NavLink
-         to="/"
+         to="/lists"
          end
          className={({ isActive }) =>
            isActive ? "block py-3 text-2xl bg-zinc-700" : "block py-3 text-2xl hover:bg-zinc-600"
          }
          onClick={() => setIsOpen(false)}
        >
-         Home
+       Lists
        </NavLink>
-       {/* <NavLink
-         to="/aboutus"
-         className={({ isActive }) =>
-           isActive ? "block py-3 text-2xl bg-zinc-700" : "block py-3 text-2xl hover:bg-zinc-600"
-         }
-         onClick={() => setIsOpen(false)}
-       >
-         About us
-       </NavLink> */}
        <NavLink
-         to="/container"
+         to="/orders"
          className={({ isActive }) =>
            isActive ? "block py-3 text-2xl bg-zinc-700" : "block py-3 text-2xl hover:bg-zinc-600"
          }
          onClick={() => setIsOpen(false)}
        >
-         All products
+         Orders
        </NavLink>
-
        <NavLink
-         to="/cart"
+         to="/stocks"
          className={({ isActive }) =>
            isActive ? "block py-3 text-2xl bg-zinc-700" : "block py-3 text-2xl hover:bg-zinc-600"
          }
          onClick={() => setIsOpen(false)}
        >
-         Your Cart
+         Stocks
        </NavLink>
-
      </div>
      
       )}
