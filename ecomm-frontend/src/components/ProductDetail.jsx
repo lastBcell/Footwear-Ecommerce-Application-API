@@ -11,7 +11,7 @@ function ProductDetail() {
     
     const [Product,SetProduct] = useState({})
     useEffect(()=>{
-        axios.get('http://localhost:3000/user/product/'+id)
+        axios.get('https://footwear-ecommerce-application-api.onrender.com/user/product/'+id)
         .then(response=>{
             SetProduct(response.data.product)
         })

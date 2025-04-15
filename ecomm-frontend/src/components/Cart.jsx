@@ -9,7 +9,7 @@ const Cart = () => {
   const id = "67b6f43c122ac9053122b457";
   function fetchCart() {
     axios
-      .get(`http://localhost:3000/user/getcart/${id}`)
+      .get(`https://footwear-ecommerce-application-api.onrender.com/user/getcart/${id}`)
       .then((response) => {
         SetCart(response.data);
       });
