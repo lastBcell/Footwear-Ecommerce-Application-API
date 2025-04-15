@@ -5,12 +5,12 @@ import Aboutus from "../components/Aboutus";
 import Hero from "../components/Hero";
 import Foreground from "../components/Foreground";
 import AdminProductDetail from "../components/AdminProductDetail";
-import ProductDetail from "../components/productDetail";
+import ProductDetail from "../components/ProductDetail";
 
-import login from "../components/admin/login";
-import register from "../components/admin/register";
-import Orders from "../components/admin/orders";
-import Stocks from "../components/admin/stocks";
+import login from "../components/admin/Login";
+import register from "../components/admin/Register";
+import Orders from "../components/admin/Orders";
+import Stocks from "../components/admin/Stocks";
 import List from "../components/admin/List";
 import Qr from "../components/admin/Qr"
 import OrderUpdate from "../components/admin/OrderUpdate";
