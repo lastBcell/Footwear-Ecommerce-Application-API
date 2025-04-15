@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 const Container = () => {
   var [posts, setPosts]=useState([]);
   function fetchPosts(){
-    axios.get('http://localhost:3000/user/showallproducts')
+    axios.get('https://footwear-ecommerce-application-api.onrender.com/user/showallproducts')
+    // https://footwear-ecommerce-application-api.onrender.com/
     .then(response=>{
         setPosts( response.data.products)
         // console.log(posts)
