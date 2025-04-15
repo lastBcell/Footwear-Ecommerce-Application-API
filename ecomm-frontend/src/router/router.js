@@ -3,7 +3,7 @@ import React from "react"; // Make sure to import React
 
 import Aboutus from "../components/Aboutus";
 import Hero from "../components/Hero";
-import Foreground from "../components/foreground";
+import Foreground from "../components/Foreground";
 import AdminProductDetail from "../components/AdminProductDetail";
 import ProductDetail from "../components/productDetail";
 
