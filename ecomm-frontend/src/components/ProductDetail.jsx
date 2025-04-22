@@ -6,12 +6,13 @@ import { useParams } from 'react-router-dom';
 import axios from "axios"
 
 function ProductDetail() {
+    const URL = import.meta.env.VITE_OPEN_URL;
 
     const {id} = useParams()
     
     const [Product,SetProduct] = useState({})
     useEffect(()=>{
-        axios.get('https://footwear-ecommerce-application-api.onrender.com/user/product/'+id)
+        axios.get(`${URL}/user/product/`+id)
         .then(response=>{
             SetProduct(response.data.product)
         })

@@ -5,11 +5,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Cart = () => {
+  const URL = import.meta.env.VITE_OPEN_URL;
   var [Cart, SetCart] = useState([]);
   const id = "67b6f43c122ac9053122b457";
   function fetchCart() {
     axios
-      .get(`https://footwear-ecommerce-application-api.onrender.com/user/getcart/${id}`)
+      .get(`${URL}/user/getcart/${id}`)
       .then((response) => {
         SetCart(response.data);
       });
