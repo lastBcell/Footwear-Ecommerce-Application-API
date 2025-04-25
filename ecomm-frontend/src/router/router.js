@@ -8,10 +8,10 @@ import AdminProductDetail from "../components/AdminProductDetail";
 import ProductDetail from "../components/ProductDetail";
 
 import login from "../components/admin/Login";
-import register from "../components/admin/Register";
+import Register from "../components/admin/Register"
 import Orders from "../components/admin/Orders";
 import Stocks from "../components/admin/Stocks";
-import List from "../components/admin/List";
+import List from "../components/admin/List";    
 import Qr from "../components/admin/Qr"
 import OrderUpdate from "../components/admin/OrderUpdate";
 import Cart from "../components/Cart"
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
     
 
     { path: 'login', element: React.createElement(login) },
-    { path: 'register', element: React.createElement(register) },
+    { path: 'register', element: React.createElement(Register) },
     { path: 'orders', element: React.createElement(Orders) },
     { path: 'lists', element: React.createElement(List) },
     { path: 'stocks', element: React.createElement(Stocks) },

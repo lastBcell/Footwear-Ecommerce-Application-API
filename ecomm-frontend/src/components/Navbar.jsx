@@ -2,9 +2,24 @@ import React, { useState } from "react";
 import { IoFootstepsOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { NavLink } from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+import { removeUser } from "../../src/store/authSlice";
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  var user = useSelector(store=>store.auth.user);
+  var token = useSelector(store=>store.auth.token);
+  console.log(user,token)
+  const Logout = () =>{
+    if(user){
+           
+            dispatch(removeUser());
+            navigate('/login');
+  }}
 
   return (
     <div>
@@ -51,7 +66,26 @@ const Navbar = () => {
       >
        Cart
       </NavLink>
-          <button className="hover:bg-zinc-700 p-2 px-3 rounded">SignIn</button>
+          {/* <button className="hover:bg-zinc-700 p-2 px-3 rounded">SignIn</button> */}
+           {/* <NavLink
+        to="/register"
+        className={({ isActive }) =>
+          isActive ? "bg-zinc-700 text-lime-400 p-2 px-3 rounded" : "text-zinc-500 hover:bg-zinc-700 p-2 px-3 rounded"
+        }
+      >
+       Register
+      </NavLink> */}
+      
+          {/* <button className="hover:bg-zinc-700 p-2 px-3 rounded">SignIn</button> */}
+        
+       {user ?  <button className="hover:bg-zinc-700 p-2 px-3 rounded" onClick={Logout}>Logout</button>  :<NavLink
+        to="/login"
+        className={({ isActive }) =>
+          isActive ? "bg-zinc-700 text-lime-400 p-2 px-3 rounded" : "text-zinc-500 hover:bg-zinc-700 p-2 px-3 rounded"
+        }
+      >
+      Login
+      </NavLink>}
         </div>
 
         <div className="sm:hidden p-2">

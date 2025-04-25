@@ -5,9 +5,13 @@ import App from './App.jsx'
 
 import { RouterProvider } from 'react-router-dom';
 import router from './router/router.js';
+import { Provider } from 'react-redux'
+import store from '../src/store/store.js'  // adjust this path based on where you create your store
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Provider store={store}>
     <RouterProvider router = {router } />
+    </Provider>
   </StrictMode>,
 )

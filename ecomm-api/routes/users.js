@@ -40,13 +40,13 @@ const verifyToken = (requiredRole) => {
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.status('200').json("welcome to User Route");
-});
+// router.get('/', function(req, res, next) {
+//   res.status('200').json("welcome to User Route");
+// });
 
 // #User Registration#
 router.post('/register', (req, res) => {
-  const { email, password, confirmPassword,mobile,name } = req.body;
+  const { email, password, confirmPassword,mobile,name,role } = req.body;
 
   // Check if the password and confirm password match
   if (password !== confirmPassword) {
@@ -54,7 +54,7 @@ router.post('/register', (req, res) => {
   }
 
   // Check all fields are not empty
-  const user = new User({ email, password,name,mobile });
+  const user = new User({ email, password,name,mobile,role });
   const validationError = user.validateSync();
 
   if (validationError) {
@@ -74,7 +74,7 @@ router.post('/register', (req, res) => {
     .then(hashedPassword => {
       if (!hashedPassword) return;
       // Create a new user in MongoDB
-      const newUser = new User({ email, password: hashedPassword ,mobile,name});
+      const newUser = new User({ email, password: hashedPassword ,mobile,name,role});
       return newUser.save();
     })
     .then(savedUser  => {
