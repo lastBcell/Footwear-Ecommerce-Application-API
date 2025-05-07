@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setUser,setToken } from "../../store/authSlice";
 
 
-const login = () => {
+const Login = () => {
     const URL = import.meta.env.VITE_OPEN_URL;
     var [email, setEmail] = useState('');
     var [password, setPassword] = useState('');
@@ -81,4 +81,4 @@ const login = () => {
   )
 }
 
-export default login
+export default Login
